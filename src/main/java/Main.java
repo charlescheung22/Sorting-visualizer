@@ -29,6 +29,7 @@ public class Main extends SimpleApplication {
     Material blue;
     boolean start = false;
     List<Geometry> displayList = new ArrayList<>();
+    boolean step = false;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -109,7 +110,7 @@ public class Main extends SimpleApplication {
                     Geometry tempGeometry1 = displayList.get(index1);
                     tempGeometry1.setMaterial(red);
                     Geometry tempGeometry2 = displayList.get(index2);
-                    tempGeometry1.setMaterial(red);
+                    tempGeometry2.setMaterial(red);
 
                     tempGeometry1.setLocalTranslation(index2, tempGeometry1.getLocalTranslation().getY(), 0);
                     tempGeometry2.setLocalTranslation(index1, tempGeometry2.getLocalTranslation().getY(), 0);
@@ -124,20 +125,26 @@ public class Main extends SimpleApplication {
                 }
             }
         }
+        if (step) {
+            start = false;
+            step = false;
+        }
     }
 
     private void initKeys() {
         inputManager.addMapping("Pause", new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addMapping("Shuffle", new KeyTrigger(KeyInput.KEY_S));
+        inputManager.addMapping("Step", new KeyTrigger(KeyInput.KEY_N));
         inputManager.addListener(actionListener, "Pause");
         inputManager.addListener(actionListener, "Shuffle");
+        inputManager.addListener(actionListener, "Step");
     }
 
     final private ActionListener actionListener = new ActionListener() {
         @Override
         public void onAction(String name, boolean keyPressed, float tpf) {
             if (name.equals("Pause") && !keyPressed) {
-                start = true;
+                start = !start;
             } else if (name.equals("Shuffle") && !keyPressed) {
                 List<Integer> list = IntStream.range(1, LIST_SIZE + 1).boxed().collect(Collectors.toList());
                 Collections.shuffle(list);
@@ -161,21 +168,10 @@ public class Main extends SimpleApplication {
                 instructionsSize = instructions.size();
                 instructionsIndex = 0;
                 start = false;
+            } else if (name.equals("Step") && !keyPressed) {
+                step = true;
+                start = true;
             }
         }
     };
-
-
-
-    public static void wait(int ms)
-    {
-        try
-        {
-            Thread.sleep(ms);
-        }
-        catch(InterruptedException ex)
-        {
-            Thread.currentThread().interrupt();
-        }
-    }
 }
