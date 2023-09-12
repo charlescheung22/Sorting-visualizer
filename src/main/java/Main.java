@@ -19,7 +19,7 @@ import sorting.*;
 import visualization.*;
 
 public class Main extends SimpleApplication {
-    final int LIST_SIZE = 40;
+    final int LIST_SIZE = 100;
     List<ColoredData> instructions;
     int instructionsSize;
     int instructionsIndex = 0;
@@ -54,7 +54,7 @@ public class Main extends SimpleApplication {
         blue = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         blue.setColor("Color", ColorRGBA.Blue);
 
-        cam.setLocation(new Vector3f(LIST_SIZE / 2, LIST_SIZE / 2 / 4, 40f));
+        cam.setLocation(new Vector3f(LIST_SIZE / 2, LIST_SIZE / 2 / 4, LIST_SIZE));
 
 
         for (int i = 0; i < LIST_SIZE; i++) {
@@ -74,7 +74,6 @@ public class Main extends SimpleApplication {
         instructionsSize = instructions.size();
 
         initKeys();
-
     }
 
     @Override
@@ -97,9 +96,9 @@ public class Main extends SimpleApplication {
                     int index1 = tempData.getIndex1();
                     int index2 = tempData.getIndex2();
                     Geometry tempGeometry = displayList.get(index1);
-                    tempGeometry.setMaterial(red);
+                    tempGeometry.setMaterial(blue);
                     tempGeometry = displayList.get(index2);
-                    tempGeometry.setMaterial(red);
+                    tempGeometry.setMaterial(blue);
                     currentlyColored.add(index1);
                     currentlyColored.add(index2);
 
@@ -107,28 +106,21 @@ public class Main extends SimpleApplication {
                     SwapData tempData = (SwapData) data;
                     int index1 = tempData.getIndex1();
                     int index2 = tempData.getIndex2();
-                    Geometry tempGeometry = displayList.get(index1);
-                    tempGeometry.setMaterial(blue);
-                    Vector3f tempLocation1 = tempGeometry.getWorldTranslation().clone();
+                    Geometry tempGeometry1 = displayList.get(index1);
+                    tempGeometry1.setMaterial(red);
                     Geometry tempGeometry2 = displayList.get(index2);
-                    tempGeometry.setMaterial(blue);
-                    Vector3f tempLocation2 = tempGeometry2.getWorldTranslation().clone();
+                    tempGeometry1.setMaterial(red);
 
-                    Vector3f difference = tempLocation1.subtract(tempLocation2);
-
-                    tempGeometry2.move(difference);
-
-                    difference = difference.mult(-1);  // TODO!!!!
-
-                    tempGeometry.move(difference);
+                    tempGeometry1.setLocalTranslation(index2, tempGeometry1.getLocalTranslation().getY(), 0);
+                    tempGeometry2.setLocalTranslation(index1, tempGeometry2.getLocalTranslation().getY(), 0);
 
                     displayList.set(index1, tempGeometry2);
-                    displayList.set(index2, tempGeometry);
+                    displayList.set(index2, tempGeometry1);
                     currentlyColored.add(index1);
                     currentlyColored.add(index2);
 
                 } else if (data instanceof SortedData) {
-                    return;
+                    start = false;
                 }
             }
         }
@@ -136,7 +128,9 @@ public class Main extends SimpleApplication {
 
     private void initKeys() {
         inputManager.addMapping("Pause", new KeyTrigger(KeyInput.KEY_SPACE));
+        inputManager.addMapping("Shuffle", new KeyTrigger(KeyInput.KEY_S));
         inputManager.addListener(actionListener, "Pause");
+        inputManager.addListener(actionListener, "Shuffle");
     }
 
     final private ActionListener actionListener = new ActionListener() {
@@ -144,6 +138,29 @@ public class Main extends SimpleApplication {
         public void onAction(String name, boolean keyPressed, float tpf) {
             if (name.equals("Pause") && !keyPressed) {
                 start = true;
+            } else if (name.equals("Shuffle") && !keyPressed) {
+                List<Integer> list = IntStream.range(1, LIST_SIZE + 1).boxed().collect(Collectors.toList());
+                Collections.shuffle(list);
+
+
+                rootNode.detachAllChildren();
+                displayList.clear();
+                for (int i = 0; i < LIST_SIZE; i++) {
+                    Box tempBox = new Box(0.25f, 0.25f * list.get(i), 0.25f);
+                    Geometry tempGeometry = new Geometry("Box " + list.get(i), tempBox);
+                    tempGeometry.setMaterial(white);
+                    tempGeometry.setLocalTranslation(i, 0.25f * list.get(i), 0);
+                    displayList.add(tempGeometry);
+
+                    rootNode.attachChild(tempGeometry);
+                }
+
+                BubbleNaive<Integer> bubbleNaive = new BubbleNaive<>(list);
+                bubbleNaive.sort();
+                instructions = bubbleNaive.getColoredData();
+                instructionsSize = instructions.size();
+                instructionsIndex = 0;
+                start = false;
             }
         }
     };

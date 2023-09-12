@@ -16,17 +16,21 @@ public class BubbleNaive<T extends Comparable<T>> implements ColoredDataAggregat
 
     public void sort() {
         coloredData = new ArrayList<>();
+        boolean sorted = true;
 
         for (int i = 0; i < listSize; i++) {
             for (int j = 0; j < listSize - 1; j++) {
                 coloredData.add(new ComparisonData(j, j + 1));
                 if (list.get(j).compareTo(list.get(j + 1)) > 0) {
+                    sorted = false;
                     coloredData.add(new SwapData(j, j + 1));
                     T temp = list.get(j);
                     list.set(j, list.get(j + 1));
                     list.set(j + 1, temp);
                 }
             }
+            if (sorted) {return;}
+            sorted = true;
         }
         coloredData.add(new SortedData());
     }
