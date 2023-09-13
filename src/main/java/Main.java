@@ -24,9 +24,9 @@ public class Main extends SimpleApplication {
     int instructionsSize;
     int instructionsIndex = 0;
     List<Integer> currentlyColored = new ArrayList<>();
-    Material white;
-    Material red;
-    Material blue;
+    static Material white;
+    static Material red;
+    static Material blue;
     boolean start = false;
     List<Geometry> displayList = new ArrayList<>();
     boolean step = false;
@@ -44,10 +44,7 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        List<Integer> list = IntStream.range(1, LIST_SIZE + 1).boxed().collect(Collectors.toList());
-        Collections.shuffle(list);
-
-
+        // Setup colors and camera, application startups
         white = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         white.setColor("Color", ColorRGBA.White);
         red = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -56,6 +53,9 @@ public class Main extends SimpleApplication {
         blue.setColor("Color", ColorRGBA.Blue);
 
         cam.setLocation(new Vector3f(LIST_SIZE / 2, LIST_SIZE / 2 / 4, LIST_SIZE));
+
+        List<Integer> list = IntStream.range(1, LIST_SIZE + 1).boxed().collect(Collectors.toList());
+        Collections.shuffle(list);
 
 
         for (int i = 0; i < LIST_SIZE; i++) {
@@ -69,19 +69,24 @@ public class Main extends SimpleApplication {
         }
 
 
-        BubbleNaive<Integer> bubbleNaive = new BubbleNaive<>(list);
-        bubbleNaive.sort();
-        instructions = bubbleNaive.getColoredData();
+        SelectionNaive<Integer> insertionNaive = new SelectionNaive<>(list);
+        insertionNaive.sort();
+        instructions = insertionNaive.getColoredData();
         instructionsSize = instructions.size();
 
         initKeys();
     }
 
+//    protected List<ColoredData> getColoredDataAggregate(Class<ColoredDataAggregator> class, List<T extends Comparable<T>> list) {
+//        ColoredDataAggregator tmpclass = new ColoredDataAggregator(list);
+//
+//        return coloredDataAggregator.getColoredData();
+//    }  TODO: factory method for colored data aggregators
+
     @Override
     public void simpleUpdate(float tpf) {
-        if (!start) {
-            return;
-        } else {
+        if (!start) {return;} else {
+            // Clear colored boxes
             for (int i : currentlyColored) {
                 Geometry tempGeometry = displayList.get(i);
                 tempGeometry.setMaterial(white);
@@ -125,6 +130,7 @@ public class Main extends SimpleApplication {
                 }
             }
         }
+
         if (step) {
             start = false;
             step = false;
@@ -145,6 +151,7 @@ public class Main extends SimpleApplication {
         public void onAction(String name, boolean keyPressed, float tpf) {
             if (name.equals("Pause") && !keyPressed) {  // switches here don't work??? idfk
                 start = !start;
+
             } else if (name.equals("Shuffle") && !keyPressed) {
                 List<Integer> list = IntStream.range(1, LIST_SIZE + 1).boxed().collect(Collectors.toList());
                 Collections.shuffle(list);
@@ -162,12 +169,13 @@ public class Main extends SimpleApplication {
                     rootNode.attachChild(tempGeometry);
                 }
 
-                BubbleNaive<Integer> bubbleNaive = new BubbleNaive<>(list);
-                bubbleNaive.sort();
-                instructions = bubbleNaive.getColoredData();
+                SelectionNaive<Integer> insertionNaive = new SelectionNaive<>(list);
+                insertionNaive.sort();
+                instructions = insertionNaive.getColoredData();
                 instructionsSize = instructions.size();
                 instructionsIndex = 0;
                 start = false;
+
             } else if (name.equals("Step") && !keyPressed) {
                 step = true;
                 start = true;
@@ -175,3 +183,7 @@ public class Main extends SimpleApplication {
         }
     };
 }
+
+
+
+// TODO add a way to change the sorting algorithm with eg. number keys
