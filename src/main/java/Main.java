@@ -92,7 +92,7 @@ public class Main extends SimpleApplication {
                 ColoredData data = instructions.get(instructionsIndex);
                 instructionsIndex++;
 
-                if (data instanceof ComparisonData) {
+                if (data instanceof ComparisonData) {  // TODO need to use subtype polymorphism
                     ComparisonData tempData = (ComparisonData) data;
                     int index1 = tempData.getIndex1();
                     int index2 = tempData.getIndex2();
@@ -143,7 +143,7 @@ public class Main extends SimpleApplication {
     final private ActionListener actionListener = new ActionListener() {
         @Override
         public void onAction(String name, boolean keyPressed, float tpf) {
-            if (name.equals("Pause") && !keyPressed) {
+            if (name.equals("Pause") && !keyPressed) {  // switches here don't work??? idfk
                 start = !start;
             } else if (name.equals("Shuffle") && !keyPressed) {
                 List<Integer> list = IntStream.range(1, LIST_SIZE + 1).boxed().collect(Collectors.toList());
