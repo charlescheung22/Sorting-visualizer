@@ -1,3 +1,5 @@
+import java.awt.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +21,7 @@ import sorting.*;
 import visualization.*;
 
 public class Main extends SimpleApplication {
-    final int LIST_SIZE = 64;
+    final int LIST_SIZE = 200;
     List<ColoredData> instructions;
     int instructionsSize;
     int instructionsIndex = 0;
@@ -30,14 +32,22 @@ public class Main extends SimpleApplication {
     boolean start = false;
     List<Geometry> displayList = new ArrayList<>();
     boolean step = false;
+    static final boolean SHOW_SETTINGS = true;
 
     public static void main(String[] args) {
         Main app = new Main();
 
         AppSettings settings = new AppSettings(true);
-        settings.setResolution(800, 600);
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        int i = 0; // note: there are usually several, let's pick the first
+        settings.setResolution(gd.getDisplayMode().getWidth(),gd.getDisplayMode().getHeight());
+        settings.setFrequency(gd.getDisplayMode().getRefreshRate());
+        settings.setBitsPerPixel(gd.getDisplayMode().getBitDepth());
+        settings.setFullscreen(gd.isFullScreenSupported());
         settings.setTitle("Sorting-visualizer");
         app.setSettings(settings);
+
+        app.setShowSettings(SHOW_SETTINGS);
 
         app.start();
     }
@@ -69,7 +79,7 @@ public class Main extends SimpleApplication {
         }
 
 
-        MergeNaive<Integer> insertionNaive = new MergeNaive<>(list);
+        BinaryInsertionAggregator<Integer> insertionNaive = new BinaryInsertionAggregator<>(list);
         insertionNaive.sort();
         instructions = insertionNaive.getColoredData();
         instructionsSize = instructions.size();
@@ -132,7 +142,7 @@ public class Main extends SimpleApplication {
                         currentlyColored.add(index2);
                     }
 
-                } else if (data instanceof SortedData) {
+                } else if (data instanceof TerminatedData) {
                     start = false;
                 }
             }
@@ -176,7 +186,7 @@ public class Main extends SimpleApplication {
                     rootNode.attachChild(tempGeometry);
                 }
 
-                MergeNaive<Integer> insertionNaive = new MergeNaive<>(list);
+                BinaryInsertionAggregator<Integer> insertionNaive = new BinaryInsertionAggregator<>(list);
                 insertionNaive.sort();
                 instructions = insertionNaive.getColoredData();
                 instructionsSize = instructions.size();
