@@ -19,7 +19,7 @@ import sorting.*;
 import visualization.*;
 
 public class Main extends SimpleApplication {
-    final int LIST_SIZE = 100;
+    final int LIST_SIZE = 64;
     List<ColoredData> instructions;
     int instructionsSize;
     int instructionsIndex = 0;
@@ -52,7 +52,7 @@ public class Main extends SimpleApplication {
         blue = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         blue.setColor("Color", ColorRGBA.Blue);
 
-        cam.setLocation(new Vector3f(LIST_SIZE / 2, LIST_SIZE / 2 / 4, LIST_SIZE));
+        cam.setLocation(new Vector3f(((float) LIST_SIZE) / 2, ((float) LIST_SIZE) / 2 / 4, LIST_SIZE));
 
         List<Integer> list = IntStream.range(1, LIST_SIZE + 1).boxed().collect(Collectors.toList());
         Collections.shuffle(list);
@@ -69,7 +69,7 @@ public class Main extends SimpleApplication {
         }
 
 
-        SelectionNaive<Integer> insertionNaive = new SelectionNaive<>(list);
+        MergeNaive<Integer> insertionNaive = new MergeNaive<>(list);
         insertionNaive.sort();
         instructions = insertionNaive.getColoredData();
         instructionsSize = instructions.size();
@@ -112,18 +112,25 @@ public class Main extends SimpleApplication {
                     SwapData tempData = (SwapData) data;
                     int index1 = tempData.getIndex1();
                     int index2 = tempData.getIndex2();
+
                     Geometry tempGeometry1 = displayList.get(index1);
                     tempGeometry1.setMaterial(red);
-                    Geometry tempGeometry2 = displayList.get(index2);
-                    tempGeometry2.setMaterial(red);
 
-                    tempGeometry1.setLocalTranslation(index2, tempGeometry1.getLocalTranslation().getY(), 0);
-                    tempGeometry2.setLocalTranslation(index1, tempGeometry2.getLocalTranslation().getY(), 0);
+                    if (index1 == index2) {  // zwischenzug
+                        currentlyColored.add(index1);
 
-                    displayList.set(index1, tempGeometry2);
-                    displayList.set(index2, tempGeometry1);
-                    currentlyColored.add(index1);
-                    currentlyColored.add(index2);
+                    } else {
+                        Geometry tempGeometry2 = displayList.get(index2);
+                        tempGeometry2.setMaterial(red);
+
+                        tempGeometry1.setLocalTranslation(index2, tempGeometry1.getLocalTranslation().getY(), 0);
+                        tempGeometry2.setLocalTranslation(index1, tempGeometry2.getLocalTranslation().getY(), 0);
+
+                        displayList.set(index1, tempGeometry2);
+                        displayList.set(index2, tempGeometry1);
+                        currentlyColored.add(index1);
+                        currentlyColored.add(index2);
+                    }
 
                 } else if (data instanceof SortedData) {
                     start = false;
@@ -139,7 +146,7 @@ public class Main extends SimpleApplication {
 
     private void initKeys() {
         inputManager.addMapping("Pause", new KeyTrigger(KeyInput.KEY_SPACE));
-        inputManager.addMapping("Shuffle", new KeyTrigger(KeyInput.KEY_S));
+        inputManager.addMapping("Shuffle", new KeyTrigger(KeyInput.KEY_T));
         inputManager.addMapping("Step", new KeyTrigger(KeyInput.KEY_N));
         inputManager.addListener(actionListener, "Pause");
         inputManager.addListener(actionListener, "Shuffle");
@@ -169,7 +176,7 @@ public class Main extends SimpleApplication {
                     rootNode.attachChild(tempGeometry);
                 }
 
-                SelectionNaive<Integer> insertionNaive = new SelectionNaive<>(list);
+                MergeNaive<Integer> insertionNaive = new MergeNaive<>(list);
                 insertionNaive.sort();
                 instructions = insertionNaive.getColoredData();
                 instructionsSize = instructions.size();

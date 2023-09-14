@@ -14,6 +14,7 @@ public class SelectionNaive<T extends Comparable<T>> implements ColoredDataAggre
         this.listSize = list.size();
     }
 
+    @Override
     public void sort() {
         coloredData = new ArrayList<>();
         for (int i = 0; i < listSize - 1; i++) {

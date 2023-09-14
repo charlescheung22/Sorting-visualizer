@@ -14,6 +14,7 @@ public class BubbleNaive<T extends Comparable<T>> implements ColoredDataAggregat
         this.listSize = list.size();
     }
 
+    @Override
     public void sort() {
         coloredData = new ArrayList<>();
         boolean sorted = true;
