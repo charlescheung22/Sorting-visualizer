@@ -30,7 +30,7 @@ public class SelectionNaive<T extends Comparable<T>> implements ColoredDataAggre
             list.set(i, list.get(minIndex));
             list.set(minIndex, temp);
         }
-        coloredData.add(new SortedData());
+        coloredData.add(new TerminatedData());
     }
 
     @Override

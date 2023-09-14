@@ -5,12 +5,12 @@ import visualization.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InsertionNaive<T extends Comparable<T>> implements ColoredDataAggregator {
+public class InsertionAggregator<T extends Comparable<T>> implements ColoredDataAggregator {
     private final List<T> list;
     private final int listSize;
     private List<ColoredData> coloredData;
 
-    public InsertionNaive(List<T> list) {
+    public InsertionAggregator(List<T> list) {
         this.list = list;
         this.listSize = list.size();
     }
@@ -30,7 +30,7 @@ public class InsertionNaive<T extends Comparable<T>> implements ColoredDataAggre
             list.set(j + 1, key);
 
         }
-        coloredData.add(new SortedData());
+        coloredData.add(new TerminatedData());
     }
 
     @Override

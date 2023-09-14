@@ -41,7 +41,7 @@ public class QuickNaive<T extends Comparable<T>> implements ColoredDataAggregato
                 stack.push(high);
             }
         }
-        coloredData.add(new SortedData());
+        coloredData.add(new TerminatedData());
         return;
     }
 

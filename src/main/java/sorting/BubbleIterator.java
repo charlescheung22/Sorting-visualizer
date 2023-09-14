@@ -1,6 +1,5 @@
 package sorting;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -10,7 +9,7 @@ import visualization.*;
  * Bubble sort iterator. Technically an interactor class
  * @param <T> element type. Must be comparable
  */
-public class Bubble<T extends Comparable<T>> implements ColoredDataIterator {
+public class BubbleIterator<T extends Comparable<T>> implements ColoredDataIterator {
     private final List<T> list;
     private final int listSize;
     private boolean sorted = false;
@@ -18,7 +17,7 @@ public class Bubble<T extends Comparable<T>> implements ColoredDataIterator {
     private boolean hasSwapped = false;
     private boolean requiresSwap = false;
 
-    public Bubble (List<T> list) {
+    public BubbleIterator(List<T> list) {
         this.list = list;
         this.listSize = list.size();
     }
@@ -44,7 +43,7 @@ public class Bubble<T extends Comparable<T>> implements ColoredDataIterator {
             throw new NoSuchElementException();
         } else if (comparisonIndex + 1 >= listSize && !hasSwapped) {
             sorted = true;
-            return new SortedData();
+            return new TerminatedData();
         } else if (comparisonIndex + 1 >= listSize) {  // must have swapped; reset
             comparisonIndex = 0;
             hasSwapped = false;
