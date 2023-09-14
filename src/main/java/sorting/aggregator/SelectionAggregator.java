@@ -1,15 +1,15 @@
-package sorting;
+package sorting.aggregator;
 
 import visualization.*;
 
 import java.util.List;
 import java.util.ArrayList;
 
-public class SelectionNaive<T extends Comparable<T>> implements ColoredDataAggregator {
+public class SelectionAggregator<T extends Comparable<T>> implements ColoredDataAggregator {
     private final List<T> list;
     private final int listSize;
     private List<ColoredData> coloredData;
-    public SelectionNaive(List<T> list) {
+    public SelectionAggregator(List<T> list) {
         this.list = list;
         this.listSize = list.size();
     }

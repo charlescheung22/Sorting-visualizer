@@ -17,7 +17,8 @@ import com.jme3.system.AppSettings;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.Geometry;
 
-import sorting.*;
+import sorting.aggregator.MergeAggregator;
+import sorting.aggregator.QuickAggregator;
 import visualization.*;
 
 public class Main extends SimpleApplication {
@@ -79,9 +80,9 @@ public class Main extends SimpleApplication {
         }
 
 
-        BinaryInsertionAggregator<Integer> insertionNaive = new BinaryInsertionAggregator<>(list);
-        insertionNaive.sort();
-        instructions = insertionNaive.getColoredData();
+        QuickAggregator<Integer> sortingAggregator = new QuickAggregator<>(list);
+        sortingAggregator.sort();
+        instructions = sortingAggregator.getColoredData();
         instructionsSize = instructions.size();
 
         initKeys();
@@ -186,9 +187,9 @@ public class Main extends SimpleApplication {
                     rootNode.attachChild(tempGeometry);
                 }
 
-                BinaryInsertionAggregator<Integer> insertionNaive = new BinaryInsertionAggregator<>(list);
-                insertionNaive.sort();
-                instructions = insertionNaive.getColoredData();
+                QuickAggregator<Integer> sortingAggregator = new QuickAggregator<>(list);
+                sortingAggregator.sort();
+                instructions = sortingAggregator.getColoredData();
                 instructionsSize = instructions.size();
                 instructionsIndex = 0;
                 start = false;

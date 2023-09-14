@@ -1,17 +1,16 @@
-package sorting;
+package sorting.aggregator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Collections;
 
 import visualization.*;
 
-public class MergeNaive<T extends Comparable<T>> implements ColoredDataAggregator {
+public class MergeAggregator<T extends Comparable<T>> implements ColoredDataAggregator {
     private final List<T> list;
     private final int listSize;
     private List<ColoredData> coloredData;
 
-    public MergeNaive(List<T> list) {
+    public MergeAggregator(List<T> list) {
         this.list = list;
         this.listSize = list.size();
     }
@@ -44,16 +43,22 @@ public class MergeNaive<T extends Comparable<T>> implements ColoredDataAggregato
         int i = 0, j = 0, k = left;  // initial indexes
         // preserve left, mid and right indexes for colored data
 
+        List<T> leftList = list.subList(left, mid + 1);
+        List<T> rightList = list.subList(mid + 1, right + 1);
+
         while (i < n1 && j < n2) {
-            coloredData.add(new ComparisonData(left + i, mid + 1 + j));
-            if (list.get(left + i).compareTo(list.get(mid + 1 + j)) <= 0) {
-
+            if (leftList.get(i).compareTo(rightList.get(j)) <= 0) {
+                list.set(k, leftList.get(i));
+                coloredData.add(new SwapData(k, left + i));  // must compare many then set
+                i++;
             } else {
-
+                list.set(k, rightList.get(j));
+                coloredData.add(new SwapData(k, mid + 1 + j));
+                j++;
             }
-
-            k++;  // since we know
+            k++;
         }
+
     }
 
     @Override

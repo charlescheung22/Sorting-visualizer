@@ -1,4 +1,4 @@
-package sorting;
+package sorting.aggregator;
 
 public interface ColoredDataAggregator {
     public void sort();

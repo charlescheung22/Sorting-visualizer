@@ -1,4 +1,4 @@
-package sorting;
+package sorting.aggregator;
 
 import java.util.List;
 import java.util.ArrayList;
