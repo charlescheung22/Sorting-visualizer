@@ -17,7 +17,7 @@ public class DoubleSelectionAggregator<T extends Comparable<T>> implements Color
     }
 
     @Override
-    public void sort() {  // TODO I'm somehow losing packets of information!!!
+    public void sort() {
         coloredData = new ArrayList<>();
 
         int left = 0;
@@ -44,6 +44,11 @@ public class DoubleSelectionAggregator<T extends Comparable<T>> implements Color
             if (min != left) {
                 Collections.swap(list, min, left);
                 coloredData.add(new SwapData(min, left));
+
+                // If max was at left, we update max because its position has changed
+                if (max == left) {
+                    max = min;
+                }
             }
 
             if (max != right) {
