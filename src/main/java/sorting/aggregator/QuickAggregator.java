@@ -1,18 +1,19 @@
-package sorting;
+package sorting.aggregator;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Deque;
 import java.util.ArrayDeque;
+import java.util.Collections;
 
 import visualization.*;
 
-public class QuickNaive<T extends Comparable<T>> implements ColoredDataAggregator {
+public class QuickAggregator<T extends Comparable<T>> implements ColoredDataAggregator {
     private final List<T> list;
     private final int listSize;
     private List<ColoredData> coloredData;
 
-    public QuickNaive(List<T> list) {
+    public QuickAggregator(List<T> list) {
         this.list = list;
         this.listSize = list.size();
     }
@@ -51,13 +52,11 @@ public class QuickNaive<T extends Comparable<T>> implements ColoredDataAggregato
 
         for (int j = low; j < high; j++) {  // traverse and rearrange
             coloredData.add(new ComparisonData(j, high));
+
             if (list.get(j).compareTo(pivot) < 0) {  // Compare
                 i++;
                 coloredData.add(new SwapData(i, j));  // Swap
-//                T temp = list.get(i);
-//                list.set(i, list.get(j));
-//                list.set(j, temp);
-
+                Collections.swap(list, i, j);
             }
         }
         coloredData.add(new SwapData(i + 1, high));
