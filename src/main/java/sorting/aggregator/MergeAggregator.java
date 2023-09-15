@@ -46,14 +46,17 @@ public class MergeAggregator<T extends Comparable<T>> implements ColoredDataAggr
         List<T> leftList = list.subList(left, mid + 1);
         List<T> rightList = list.subList(mid + 1, right + 1);
 
+        List<ColoredData> placementData = new ArrayList<>();
+
         while (i < n1 && j < n2) {
+            coloredData.add(new ComparisonData(left + i, mid + 1 + j));
             if (leftList.get(i).compareTo(rightList.get(j)) <= 0) {
                 list.set(k, leftList.get(i));
-                coloredData.add(new SwapData(k, left + i));  // must compare many then set
+                placementData.add(new SwapData(k, left + i));  // TODO setdata???
                 i++;
             } else {
                 list.set(k, rightList.get(j));
-                coloredData.add(new SwapData(k, mid + 1 + j));
+                coloredData.add(new SwapData(k, mid + 1 + j));  // TODO I give up, time to do Radix msg
                 j++;
             }
             k++;
