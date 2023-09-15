@@ -17,12 +17,12 @@ import com.jme3.system.AppSettings;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.Geometry;
 
-import sorting.aggregator.MergeAggregator;
-import sorting.aggregator.QuickAggregator;
+import sorting.aggregator.*;
+import sorting.iterator.*;
 import visualization.*;
 
 public class Main extends SimpleApplication {
-    final int LIST_SIZE = 200;
+    final int LIST_SIZE = 10;
     List<ColoredData> instructions;
     int instructionsSize;
     int instructionsIndex = 0;
@@ -57,11 +57,11 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
         // Setup colors and camera, application startups
         white = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        white.setColor("Color", ColorRGBA.White);
-        red = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        red.setColor("Color", ColorRGBA.Red);
         blue = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        red = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        white.setColor("Color", ColorRGBA.White);
         blue.setColor("Color", ColorRGBA.Blue);
+        red.setColor("Color", ColorRGBA.Red);
 
         cam.setLocation(new Vector3f(((float) LIST_SIZE) / 2, ((float) LIST_SIZE) / 2 / 4, LIST_SIZE));
 
@@ -80,7 +80,7 @@ public class Main extends SimpleApplication {
         }
 
 
-        QuickAggregator<Integer> sortingAggregator = new QuickAggregator<>(list);
+        BogoAggregator<Integer> sortingAggregator = new BogoAggregator<>(list);
         sortingAggregator.sort();
         instructions = sortingAggregator.getColoredData();
         instructionsSize = instructions.size();
@@ -119,7 +119,7 @@ public class Main extends SimpleApplication {
                     currentlyColored.add(index1);
                     currentlyColored.add(index2);
 
-                } else if (data instanceof SwapData) {
+                } else if (data instanceof SwapData) {  // Massive code smell :weary:
                     SwapData tempData = (SwapData) data;
                     int index1 = tempData.getIndex1();
                     int index2 = tempData.getIndex2();
@@ -142,6 +142,13 @@ public class Main extends SimpleApplication {
                         currentlyColored.add(index1);
                         currentlyColored.add(index2);
                     }
+
+                } else if (data instanceof CheckData) {
+                    CheckData tempData = (CheckData) data;
+                    int index = tempData.getIndex1();
+                    Geometry tempGeometry = displayList.get(index);
+                    tempGeometry.setMaterial(blue);
+                    currentlyColored.add(index);
 
                 } else if (data instanceof TerminatedData) {
                     start = false;
@@ -187,7 +194,7 @@ public class Main extends SimpleApplication {
                     rootNode.attachChild(tempGeometry);
                 }
 
-                QuickAggregator<Integer> sortingAggregator = new QuickAggregator<>(list);
+                BogoAggregator<Integer> sortingAggregator = new BogoAggregator<>(list);
                 sortingAggregator.sort();
                 instructions = sortingAggregator.getColoredData();
                 instructionsSize = instructions.size();
