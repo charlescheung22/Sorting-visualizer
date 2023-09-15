@@ -22,7 +22,7 @@ import sorting.iterator.*;
 import visualization.*;
 
 public class Main extends SimpleApplication {
-    final int LIST_SIZE = 800;
+    final int LIST_SIZE = 10;
     List<ColoredData> instructions;
     int instructionsSize;
     int instructionsIndex = 0;
@@ -66,7 +66,7 @@ public class Main extends SimpleApplication {
         setDisplayFps(true);
         setDisplayStatView(false);  // stats and fps menu bottom left
 
-        cam.setLocation(new Vector3f(((float) LIST_SIZE) / 2, ((float) LIST_SIZE) / 4, LIST_SIZE * 0.75f));
+        cam.setLocation(new Vector3f((((float) LIST_SIZE) / 2 - 0.5f), ((float) LIST_SIZE) / 4, LIST_SIZE * 0.75f));
 
         List<Integer> list = IntStream.range(1, LIST_SIZE + 1).boxed().collect(Collectors.toList());
         Collections.shuffle(list);
@@ -83,7 +83,7 @@ public class Main extends SimpleApplication {
         }
 
 
-        QuickAggregator<Integer> sortingAggregator = new QuickAggregator<>(list);
+        BogoAggregator<Integer> sortingAggregator = new BogoAggregator<>(list);
         sortingAggregator.sort();
         instructions = sortingAggregator.getColoredData();
         instructionsSize = instructions.size();
@@ -197,7 +197,7 @@ public class Main extends SimpleApplication {
                     rootNode.attachChild(tempGeometry);
                 }
 
-                QuickAggregator<Integer> sortingAggregator = new QuickAggregator<>(list);
+                BogoAggregator<Integer> sortingAggregator = new BogoAggregator<>(list);
                 sortingAggregator.sort();
                 instructions = sortingAggregator.getColoredData();
                 instructionsSize = instructions.size();
