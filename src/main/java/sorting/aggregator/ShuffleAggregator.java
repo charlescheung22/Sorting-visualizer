@@ -11,22 +11,36 @@ public class ShuffleAggregator<T extends Comparable<T>> implements ColoredDataAg
     private final int listSize;
     private List<ColoredData> coloredData;
 
+
     public ShuffleAggregator(List<T> list) {
         this.list = list;
         this.listSize = list.size();
     }
 
-    @Override
-    public void sort() {  // "sort" lmao
+    public void sortWithoutTerminationData() {
+        sortHelper();
+    }
+
+    private void sortHelper() {
         coloredData = new ArrayList<>();
 
         for (int i = 0; i < listSize; i++) {
+            coloredData.add(new CheckData(i));
             int randomIndex = (int) (Math.random() * listSize);
             Collections.swap(list, i, randomIndex);  // The Fisher-Yates shuffle
             coloredData.add(new SwapData(i, randomIndex));
         }
+    }
+
+    @Override
+    public void sort() {  // "sort" lmao
+        sortHelper();
 
         coloredData.add(new TerminatedData());
+    }
+
+    public List<T> getList() {
+        return list;
     }
 
     @Override
