@@ -22,7 +22,7 @@ import sorting.iterator.*;
 import visualization.*;
 
 public class Main extends SimpleApplication {
-    final int LIST_SIZE = 10;
+    final int LIST_SIZE = 500;
     List<ColoredData> instructions;
     int instructionsSize;
     int instructionsIndex = 0;
@@ -83,7 +83,7 @@ public class Main extends SimpleApplication {
         }
 
 
-        BogoAggregator<Integer> sortingAggregator = new BogoAggregator<>(list);
+        ColoredDataAggregator sortingAggregator = new QuickAggregator<>(list);
         sortingAggregator.sort();
         instructions = sortingAggregator.getColoredData();
         instructionsSize = instructions.size();
@@ -197,7 +197,7 @@ public class Main extends SimpleApplication {
                     rootNode.attachChild(tempGeometry);
                 }
 
-                BogoAggregator<Integer> sortingAggregator = new BogoAggregator<>(list);
+                ColoredDataAggregator sortingAggregator = new QuickAggregator<>(list);
                 sortingAggregator.sort();
                 instructions = sortingAggregator.getColoredData();
                 instructionsSize = instructions.size();
