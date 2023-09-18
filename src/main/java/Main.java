@@ -28,8 +28,9 @@ public class Main extends SimpleApplication {
     int instructionsIndex = 0;
     List<Integer> currentlyColored = new ArrayList<>();
     static Material white;
-    static Material red;
+    static Material green;
     static Material blue;
+    static Material red;
     boolean start = false;
     List<Geometry> displayList = new ArrayList<>();
     boolean step = false;
@@ -57,9 +58,11 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
         // Setup colors and camera, application startups
         white = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        green = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         blue = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         red = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         white.setColor("Color", ColorRGBA.White);
+        green.setColor("Color", ColorRGBA.Green);
         blue.setColor("Color", ColorRGBA.Blue);
         red.setColor("Color", ColorRGBA.Red);
 
@@ -130,7 +133,9 @@ public class Main extends SimpleApplication {
                     Geometry tempGeometry1 = displayList.get(index1);
                     tempGeometry1.setMaterial(red);
 
-                    if (index1 == index2) {  // zwischenzug
+                    if (index1 == index2) {  // A "Zwischenzug" is a chess tactic where a player makes an unexpected,
+                                             // intermediate move that disrupts their opponent's expected sequence
+                                             // of moves. This tactic can be implemented as follows:
                         currentlyColored.add(index1);
 
                     } else {
