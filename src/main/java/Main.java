@@ -158,6 +158,11 @@ public class Main extends SimpleApplication {
                     tempGeometry.setMaterial(blue);
                     currentlyColored.add(index);
 
+                } else if (data instanceof SetData) {  // TODO!!!!!!!!!!!!!!!!!!!!
+                    SetData tempData = (SetData) data;
+                    int index = tempData.getIndex();
+                    int value = tempData.getValue();
+
                 } else if (data instanceof TerminatedData) {
                     start = false;
                 }
